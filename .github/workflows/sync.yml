@@ -12,7 +12,7 @@ jobs:
     sync_with_upstream:
         name: Sync with Upstream
         runs-on: ubuntu-latest
-        if: ${{ github.event.repository.fork }}
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
 
         steps:
             - name: Checkout target repo
@@ -30,5 +30,5 @@ jobs:
             - name: Check for Failure
               if: failure()
               run: |
-                  echo "[Error] Due to a change in the workflow file of the upstream repository, GitHub has automatically suspended the scheduled automatic update. You need to manually sync your fork."
+                  echo "[Error] Upstream sync failed. Please check for conflicts or API rate limits."
                   exit 1
